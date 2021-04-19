@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Raymond Juarez">
+  <link rel = "stylesheet"  type ="text/css" href = "index.css">
+  <title>Form</title>
+  <style>
+  label {color: white;}
+  a:link {color: white; }
+  a:visited {color: white;}
+  a:hover{color: green;}
+  </style>
+  </head>
+<body class="body1">
+  <div class="box">
+
+    <header>
+      <h1 class="h1">Feel free to leave your thoughts on our website!</h1>
+    </header>
+
+    <span>
+         <a href="index.html">Home Page | </a>
+         <a href="games.html">Other Gaming sites </a>
+    </span>
+
+   </div>
+
+<section>
+   <form id="form-feedback" name="feedback-form" method="POST" class="ftable2">
+     <fieldset>
+     <legend class="fcaption" id="feedback">Feedback</legend>
+     <label for="fname">First Name:</label><br>
+     <input type="text" id="first" name="fname" size="15" placeholder="John" required><br>
+
+     <label for="lname">Last Name:</label><br>
+     <input type="text" id="last" name="lname" size="15" placeholder="Doe"required><br>
+
+     <label for="email">Email:</label><br>
+     <input type="email" name="email" id="email" placeholder="JohnDoe@email.com" required><br>
+
+     <label for="comment"></label><br>
+     <textarea name="comments" rows="10" cols="30">LEAVE SOME FEEDBACK ON THE GAME OR THE WEBSITE!</textarea><br>
+   </fieldset>
+   </form>
+ </section>
+</body>
+</html>
