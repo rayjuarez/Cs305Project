@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="Raymond Juarez">
+  <link rel = "stylesheet"  type ="text/css" href = "index.css">
+  <title>R&G Games</title>
+  <style>
+  canvas{
+    box-shadow: black 20px 10px 50px;
+  }
+  a:link {color: white; }
+  a:visited {color: white;}
+  a:hover{color: green;}
+  </style>
+  <script src="index.js"></script>
+</head>
+
+
+<body class="body1">
+<div class="box">
+
+  <header>
+    <h1 class="h1">R&G Games</h1>
+  </header>
+
+  <span>
+       <a href="form.html">Feedback Form | </a>
+       <a href="games.html">Other Gaming sites | </a>
+  </span>
+
+ </div>
+
+ <div  id="score">0</div>
+ <canvas id="snakeboard" width='800' height='400'></canvas>
+
+ <style>
+   #snakeboard {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%);
+   }
+   #score {
+     color: maroon;
+     text-align: center;
+     font-size: 75px;
+   }
+ </style>
+</body>
+
+
+<script>
+ const board_border = 'maroon';
+ const board_background = "grey";
+ const snake_col = 'maroon';
+ const snake_border = 'black';
+
+ let snake = [
+   {x: 300, y: 200},
+   {x: 290, y: 200},
+   {x: 280, y: 200},
+   {x: 270, y: 200},
+   {x: 260, y: 200}
+ ]
+
+ //changes to true if the snake changes direction
+ let changeDir = false;
+ let score = 0;
+ let foodX;
+ let foodY;
+ let dx = 10;
+ let dy = 0;
+
+
+ const snakeboard = document.getElementById("snakeboard");
+ const snakeboard_ctx = snakeboard.getContext("2d");
+
+ main();
+ make_food();//this makes the food that the snake has to eat to grow bigger
+ document.addEventListener("keydown", change_Dir);//listens for when a user presses the key
+ function main() {
+   if (gameEnd()) return;
+   changeDir = false;
+   setTimeout(function onTick() {
+     clearCanvas();
+     drawFood();
+     move_snake();
+     drawSnake();
+     main()
+   }, 100)
+ }
+
+ // draw a border around the canvas
+ function clearCanvas() {
+
+   snakeboard_ctx.fillStyle = board_background;
+   snakeboard_ctx.strokestyle = board_border;
+   snakeboard_ctx.fillRect(0, 0, snakeboard.width, snakeboard.height);
+   snakeboard_ctx.strokeRect(0, 0, snakeboard.width, snakeboard.height);
+ }
+
+ // Draw the snake on the canvas
+ function drawSnake()
+ {
+   snake.forEach(drawSnakePart)
+ }
+
+ // Draw one snake part
+ function drawSnakePart(snakePart)
+ {
+   snakeboard_ctx.fillStyle = snake_col;
+   snakeboard_ctx.strokestyle = snake_border;
+   snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 10, 10);
+   snakeboard_ctx.strokeRect(snakePart.x, snakePart.y, 10, 10);
+ }
+
+//the game will end if the snake hits itself or the border of the canvas
+ function gameEnd()
+ {
+   for(let i = 4; i < snake.length; i++) {
+     if(snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true
+   }
+   const hitLWall = snake[0].x < 0;
+   const hitRWall = snake[0].x > snakeboard.width - 10;
+   const hitTWall = snake[0].y < 0;
+   const hitBWall = snake[0].y > snakeboard.height -10;
+   return hitLWall || hitRWall || hitTWall || hitBWall
+ }
+
+//function to use the arrow keys on the keyboard to make the snake move
+ function change_Dir(event)
+ {
+   const LEFT_KEY = 37;
+   const RIGHT_KEY = 39;
+   const UP_KEY = 38;
+   const DOWN_KEY = 40;
+
+   if(changeDir) return;
+   changeDir = true;
+   const keyPressed = event.keyCode;
+   const goUp = dy === -10;
+   const goDown = dy === 10;
+   const goRight = dx === 10;
+   const goLeft = dx === -10;
+   if (keyPressed === LEFT_KEY && !goRight) {
+     dx = -10;
+     dy = 0;
+   }
+   if (keyPressed === UP_KEY && !goDown) {
+     dx = 0;
+     dy = -10;
+   }
+   if (keyPressed === RIGHT_KEY && !goLeft) {
+     dx = 10;
+     dy = 0;
+   }
+   if (keyPressed === DOWN_KEY && !goUp) {
+     dx = 0;
+     dy = 10;
+   }
+ }
+
+ function random_food(min, max)
+ {
+   return Math.round((Math.random() * (max-min) + min) / 10) * 10;
+ }
+
+ function make_food()
+ {
+   foodX = random_food(0, snakeboard.width - 10);
+   foodY = random_food(0, snakeboard.height - 10);
+   snake.forEach(function eat_food(part){
+     const eatFood = part.x == foodX && part.y == foodY;
+     if(eatFood) make_food();
+   })
+ }
+
+//function makes the food on the board/canvas
+ function drawFood()
+ {
+   snakeboard_ctx.fillStyle = 'purple';
+   snakeboard_ctx.strokeStyle = 'green';
+   snakeboard_ctx.fillRect(foodX, foodY, 10, 10);
+   snakeboard_ctx.strokeRect(foodX, foodY, 10, 10);
+ }
+
+ function move_snake()
+ {
+   const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+   snake.unshift(head);
+   const eaten = snake[0].x === foodX && snake[0].y === foodY;
+   if(eaten){
+     score += 1;
+     document.getElementById('score').innerHTML = score;
+     make_food();
+   }
+   else
+   {
+     snake.pop();
+   }
+ }
+
+ </script>
+
+
+
+</body>
+</html>
